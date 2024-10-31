@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .navHeader {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background-color: #000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button a {
+            color: white;
+            text-decoration: none;
+        }
+
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .content {
+            margin-top: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navHeader">
+        <h1>Welcome to Your Dashboard</h1>
+        <button><a href="/login">Logout</a></button>
+    </div>
+    <% if (userName) { %>
+        <div class="container">
+            <h2>Hello, <%= userName %>!</h2>
+        </div>
+        <% } else { %>
+            <div class="container">
+                <p>Please <a href="/login">login</a> to access your dashboard.</p>
+            </div>
+            <% } %>
+</body>
+
+</html>

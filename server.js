@@ -33,7 +33,8 @@ app.get("/", (req, res) => {
 
 // regiser page render
 app.get("/register", (req, res) => {
-  res.render("register", {
+  console.log("hit the register get route");
+  return res.render("register", {
     title: "Register Page",
     message: "",
     errMessage: "",
@@ -101,6 +102,7 @@ app.post("/login", async (req, res) => {
     });
 
     if (!user) {
+      console.log("user not found");
       return res.render("login", {
         title: "Login Page",
         errMessage: "User not found.",
@@ -125,9 +127,10 @@ app.post("/login", async (req, res) => {
       httpOnly: true,
     });
 
+    console.log("cookies set, redirecting to dashboard");
     return res.render("dashboard", {
       title: "Dashboard Page",
-      userName: user.username,
+      userName: username,
     });
   } catch (err) {
     return res.render("login", {
@@ -137,37 +140,82 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// logout user
+app.get("/logout", (req, res) => {
+  console.log("hit the logout route");
+  res.clearCookie("user_name");
+  res.clearCookie("user_login");
+  return res.render("login", {
+    title: "Login Page",
+    message: "Logged out successfully.",
+    errMessage: "",
+  });
+});
+
 // dashboard page render
 app.get("/dashboard", async (req, res) => {
   const username = req.cookies.user_name;
   const password = req.cookies.user_login;
 
-  if (!username || !password) {
-    return res.render("login", {
+  try {
+    if (!username || !password) {
+      console.log("username and password not found in cookies");
+      return res.render("login", {
+        title: "Login Page",
+        errMessage: "Please login to view the dashboard.",
+        message: "",
+      });
+    }
+
+    const user = await User.findOne({
+      username,
+    });
+
+    const isMatch = password === user.password ? true : false;
+    if (!isMatch) {
+      console.log("password does not match the user password");
+      return res.render("login", {
+        title: "Login Page",
+        errMessage: "Please login to view the dashboard.",
+        message: "",
+      });
+    }
+
+    return res.render("dashboard", {
+      title: "Dashboard Page",
+      userName: username,
+    });
+  } catch (err) {
+    res.render("login", {
       title: "Login Page",
-      errMessage: "Please login to view the dashboard.",
+      errMessage: "An error occurred. Please try again.",
       message: "",
     });
   }
-
-  const user = await User.findOne({
-    username,
-  });
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    return res.render("login", {
-      title: "Login Page",
-      errMessage: "Please login to view the dashboard.",
-      message: "",
-    });
-  }
-
-  res.render("dashboard", {
-    title: "Dashboard Page",
-    userName: username,
-  });
 });
+
+// dashboard post route
+app.post("/dashboard", async (req, res) => {
+  console.log("hit the dashboard post route");
+});
+
+// dashboard update route
+app.put("/dashboard", async (req, res) => {
+  console.log("hit the dashboard update route");
+});
+
+// dashboard delete route
+app.delete("/dashboard", async (req, res) => {
+  console.log("hit the dashboard delete route");
+});
+
+
+
+
+
+
+
+
 
 // Start the server
 app.listen(PORT, () => {

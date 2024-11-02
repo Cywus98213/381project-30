@@ -13,8 +13,32 @@ The cloud URL for this project will be provided once the application is deployed
 To set up the project locally, follow these steps:
 
 1. **Clone the repository**:
+
    ```bash
-   git clone https://github.com/yourusername/381Project-<Group No.>.git
-   cd 381Project-<Group No.>
+   git clone https://github.com/Cywus98213/381project-30.git
+   cd 381Project-30
+
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   npm install
+
+
+   ```
+
+3. **Set up a enironment variables**:
+
+   ```bash
+   DATABASE_URL=mongodb://yourdburl
+
+
+   ```
+
+4. **Start the server**
+
+   ```bash
+   npm run dev
 
    ```

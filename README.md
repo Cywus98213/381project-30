@@ -24,21 +24,16 @@ To set up the project locally, follow these steps:
 
    ```bash
    npm install
-
-
    ```
 
 3. **Set up a enironment variables**:
 
    ```bash
    DATABASE_URL=mongodb://yourdburl
-
-
    ```
 
 4. **Start the server**
 
    ```bash
    npm run dev
-
    ```

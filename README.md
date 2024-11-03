@@ -10,7 +10,9 @@
 
 ```
 Group Number : 30
-Members: Cheng Yui Wang s13845359, Kenny , Bano
+Members: Cheng Yui Wang s13845359,
+         Kenny ,
+         Iltaf Shier Bano 12757510
 ```
 
 ## Project file intro:

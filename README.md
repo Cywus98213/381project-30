@@ -28,7 +28,7 @@ To set up the project locally, follow these steps:
 3. **Set up a enironment variables**:
 
    ```bash
-   DATABASE_URL=mongodb://yourdburl
+   MONGODB_URL=mongodb_link
    ```
 
 4. **Start the server**

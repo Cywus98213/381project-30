@@ -14,9 +14,11 @@ mongoose
   .connect(mongoUrl)
   .then(() => {
     console.log("Connected to MongoDB");
+    process.exit(0);
   })
   .catch((err) => {
     console.log("Error connecting to MongoDB", err);
+    process.exit(1);
   });
 
 // Middleware
@@ -208,14 +210,6 @@ app.put("/dashboard", async (req, res) => {
 app.delete("/dashboard", async (req, res) => {
   console.log("hit the dashboard delete route");
 });
-
-
-
-
-
-
-
-
 
 // Start the server
 app.listen(PORT, () => {

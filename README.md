@@ -17,7 +17,6 @@ To set up the project locally, follow these steps:
    ```bash
    git clone https://github.com/Cywus98213/381project-30.git
    cd 381Project-30
-
    ```
 
 2. **Install dependencies**:

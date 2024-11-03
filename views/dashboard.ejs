@@ -21,7 +21,7 @@
             align-items: center;
         }
 
-        .container {
+        .Container {
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
@@ -29,6 +29,53 @@
             border-radius: 5px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
+        .add_container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+        }
+
+        .todosContainer h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .todosContainer ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .todosContainer ul li {
+            padding: 10px;
+            border-bottom: 1px solid #f4f4f4;
+        }
+
+        .content {
+            margin-top: 20px;
+        }
+
+        .add_container button {
+            margin-left: auto;
+        }
+
+        .add_container label {
+            font-weight: bold;
+        }
+
+        .todo_box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .todo_edit {
+            display: flex;
+            gap: 10px;
+        }
+
 
         button {
             background-color: #000;
@@ -59,29 +106,130 @@
             margin-top: 20px;
         }
 
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #777;
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: green;
+            margin-top: 10px;
         }
     </style>
 </head>
 
 <body>
     <div class="navHeader">
-        <h1>Welcome to Your Dashboard</h1>
-        <button><a href="/logout">Logout</a></button>
+        <h1>Welcome to Your Dashboard, <%= userName %>!</h1>
+        <a href="/logout"><button>Logout</button></a>
     </div>
     <% if (userName) { %>
-        <div class="container">
-            <h2>Hello, <%= userName %>!</h2>
+        <div class="Container">
+            <% if (message) { %>
+                <p class="success">
+                    <%= message %>
+                </p>
+                <% }%>
+                    <% if (errMessage) { %>
+                        <p class="error">
+                            <%= errMessage %>
+                        </p>
+                        <% } %>
+
+                            <form action="/dashboard" method="POST">
+                                <div class="add_container">
+                                    <label id="todo">Add Todo:</label>
+                                    <input type="text" id="todo" name="todo" required>
+                                    <button type="submit">Add Todo</button>
+                                </div>
+                            </form>
+
+        </div>
+        <div class="Container">
+            <h2>Your Todos List:</h2>
+
+            <div class="content">
+                <% if (todos && todos.length> 0) { %>
+                    <ul>
+                        <% todos.forEach((todo, index)=> { %>
+                            <li class="todo_box">
+                                <%= index + 1 %> . <%= todo.task %>
+                                        <div class="todo_edit">
+                                            <a href="/dashboard/:id"
+                                                onclick="event.preventDefault(); deleteItem('<%= todo._id %>');">
+                                                <button>Delete</button>
+                                            </a>
+                                            <div>
+                                                <input type="text" id="edit" name="newTodo"
+                                                    placeholder="Edit this todo">
+                                                <a href="/dashboard/:id"
+                                                    onclick="event.preventDefault(); updateItem('<%= todo._id %>');">
+                                                    <button>Edit</button>
+                                                </a>
+                                            </div>
+
+                                        </div>
+
+                            </li>
+                            <% }) %>
+                    </ul>
+                    <% } else { %>
+                        <p>You have no todos.</p>
+                        <% } %>
+            </div>
         </div>
         <% } else { %>
             <div class="container">
                 <p>Please <a href="/login">login</a> to access your dashboard.</p>
             </div>
             <% } %>
+
+
 </body>
 
 </html>
+
+<script>
+    async function deleteItem(id) {
+        try {
+            const response = await fetch(`/dashboard/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                console.log("Item deleted successfully");
+                window.location.reload();
+            } else {
+                console.error("Failed to delete item");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+    async function updateItem(id) {
+        const newTodo = document.getElementById('edit').value;
+
+        const data = {
+            task: newTodo
+        };
+
+        try {
+            const response = await fetch(`/dashboard/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                console.log("Item updated successfully");
+                window.location.reload();
+            } else {
+                console.error("Failed to update item");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+</script>

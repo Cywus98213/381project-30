@@ -1,10 +1,17 @@
 const express = require("express");
 const mongoose = require("mongoose");
+
+// DB Schemas
 const User = require("./models/userModel");
+const Todo = require("./models/todoModel");
+
+// Middleware
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
+
 const app = express();
+// Port and environment variables
 const PORT = process.env.PORT || 3000;
 require("dotenv").config();
 
@@ -14,11 +21,9 @@ mongoose
   .connect(mongoUrl)
   .then(() => {
     console.log("Connected to MongoDB");
-    process.exit(0);
   })
   .catch((err) => {
     console.log("Error connecting to MongoDB", err);
-    process.exit(1);
   });
 
 // Middleware
@@ -50,6 +55,7 @@ app.post("/register", async (req, res) => {
     if (password !== confirmPassword) {
       return res.render("register", {
         title: "Register Page",
+        message: "",
         errMessage: "Passwords do not match.",
       });
     }
@@ -76,10 +82,12 @@ app.post("/register", async (req, res) => {
     return res.render("login", {
       title: "Login Page",
       message: "User created successfully. Please login.",
+      errMessage: "",
     });
   } catch (err) {
     return res.render("register", {
       title: "Register Page",
+      message: "",
       errMessage: "An error occurred. Please try again.",
     });
   }
@@ -107,6 +115,7 @@ app.post("/login", async (req, res) => {
       console.log("user not found");
       return res.render("login", {
         title: "Login Page",
+        message: "",
         errMessage: "User not found.",
       });
     }
@@ -115,6 +124,7 @@ app.post("/login", async (req, res) => {
     if (!isMatch) {
       return res.render("login", {
         title: "Login Page",
+        message: "",
         errMessage: "Invalid credentials.",
       });
     }
@@ -130,13 +140,20 @@ app.post("/login", async (req, res) => {
     });
 
     console.log("cookies set, redirecting to dashboard");
+
+    const todos = await Todo.find({ user: user._id });
+
     return res.render("dashboard", {
       title: "Dashboard Page",
-      userName: username,
+      userName: user.username,
+      todos: todos,
+      message: "",
+      errMessage: "",
     });
   } catch (err) {
     return res.render("login", {
       title: "Login Page",
+      message: "",
       errMessage: "An error occurred. Please try again.",
     });
   }
@@ -183,9 +200,14 @@ app.get("/dashboard", async (req, res) => {
       });
     }
 
+    const todos = await Todo.find({ user: user._id });
+
     return res.render("dashboard", {
       title: "Dashboard Page",
-      userName: username,
+      userName: user.username,
+      todos: todos,
+      message: "",
+      errMessage: "",
     });
   } catch (err) {
     res.render("login", {
@@ -199,16 +221,55 @@ app.get("/dashboard", async (req, res) => {
 // dashboard post route
 app.post("/dashboard", async (req, res) => {
   console.log("hit the dashboard post route");
+  const { todo } = req.body;
+  const username = req.cookies.user_name;
+
+  try {
+    const user = await User.findOne({
+      username,
+    });
+
+    if (!user) {
+      return res.render("login", {
+        title: "Login Page",
+        message: "",
+        errMessage: "User not found.",
+      });
+    }
+
+    const newTodo = new Todo({
+      task: todo,
+      user: user._id,
+    });
+
+    await newTodo.save();
+
+    user.todos.push(newTodo);
+
+    await user.save();
+
+    return res.redirect("/dashboard");
+  } catch (err) {
+    console.log(err);
+    return res.render("login", {
+      title: "Login Page",
+      message: "",
+      errMessage: "An error occurred. Please try again.",
+    });
+  }
 });
 
 // dashboard update route
-app.put("/dashboard", async (req, res) => {
+app.put("/dashboard/:id", async (req, res) => {
   console.log("hit the dashboard update route");
+  console.log("Request Todo ID: " + req.params.id);
+  console.log("Request Body: " + req.body.task);
 });
 
 // dashboard delete route
-app.delete("/dashboard", async (req, res) => {
+app.delete("/dashboard/:id", async (req, res) => {
   console.log("hit the dashboard delete route");
+  console.log("Request Todo ID: " + req.params.id);
 });
 
 // Start the server

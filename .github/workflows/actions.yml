@@ -31,11 +31,15 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'  # Change to your required Node.js version
-
+          
       # Installs dependencies
       - name: Install Dependencies
         run: npm install
-
+        
+      # Github Actions env
+      - name: Set Environment Variables
+        run: echo "MONGODB_URL=${{ secrets.MONGODB_URL }}" >> $GITHUB_ENV
+      
       # Optionally run tests
       - name: Run Tests
         run: npm run dev  # Adjust this command based on your test setup

@@ -11,7 +11,7 @@
 ```
 Group Number : 30
 Members: Cheng Yui Wang s13845359,
-         Kenny ,
+         Zhou Wenhui s13862184,
          Iltaf Shier Bano 12757510
 ```
 

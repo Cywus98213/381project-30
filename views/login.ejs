@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %>
+    </title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f4;
+            flex-direction: column;
+        }
+
+        .wrapper {
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .subContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Project 3810 SEF</h1>
+        <p>Welcome to Project 3810 SEF. This is a simple web application that demonstrates how to use Express.js,
+            EJS, and MongoDB to create a basic CRUD application.</p>
+    </div>
+
+    <div class="wrapper">
+
+        <div class="subContainer">
+            <h3>
+                <%= title %>
+            </h3>
+            <% if (message) { %>
+                <p class="success">
+                    <%= message %>
+                </p>
+                <% } %>
+                    <% if (errMessage) { %>
+                        <p class="error">
+                            <%= errMessage %>
+                        </p>
+                        <% } %>
+                            <form action="/login" method="POST">
+                                <label for="username">Username:</label>
+                                <input type="text" id="username" name="username" required>
+
+                                <label for="password">Password:</label>
+                                <input type="password" id="password" name="password" required>
+
+                                <button type="submit">Login</button>
+                            </form>
+                            <p>Don't have a account? <a href="/register">Register</a></p>
+
+        </div>
+    </div>
+</body>
+
+</html>
